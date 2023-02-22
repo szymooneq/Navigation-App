@@ -1,0 +1,19 @@
+@import url('https://unpkg.com/leaflet@1.9.3/dist/leaflet.css');
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+.leaflet-container {
+	height: 100vh;
+	width: 100%;
+}
+
+.info {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	z-index: 500;
+}
