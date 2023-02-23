@@ -1,26 +1,33 @@
+import 'leaflet-routing-machine';
 import { useCallback, useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
-import { useSearchParams } from 'react-router-dom';
+// import { useSearchParams } from 'react-router-dom';
 import { debounce } from './lib/helpers/debounce';
 
-function DisplayPosition() {
+interface props {
+	searchParams: URLSearchParams;
+	updateSearchParams: (searchParams: URLSearchParams) => void;
+}
+
+function DisplayPosition({ searchParams, updateSearchParams }: props) {
 	const map = useMap();
 	const [position, setPosition] = useState(() => map.getCenter());
-	let [searchParams, setSearchParams] = useSearchParams();
+	// let [searchParams, setSearchParams] = useSearchParams();
 
-	const updateSearchParams = debounce(() => {
+	const handleUpdatePosition = debounce(() => {
 		const zoom = map.getZoom();
 		const position = map.getCenter();
-		setSearchParams({
-			lat: position.lat.toFixed(4),
-			lng: position.lng.toFixed(4),
-			zoom: zoom.toString()
-		});
+
+		searchParams.set('lat', position.lat.toFixed(4));
+		searchParams.set('lng', position.lng.toFixed(4));
+		searchParams.set('zoom', zoom.toString());
+
+		updateSearchParams(searchParams);
 	}, 500);
 
 	const onMove = useCallback(() => {
 		setPosition(map.getCenter());
-		updateSearchParams();
+		handleUpdatePosition();
 	}, [map]);
 
 	useEffect(() => {
