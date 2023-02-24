@@ -15,8 +15,11 @@
 }
 
 body {
-	background-color: rgb(23 23 23);
-	overflow-x: hidden;
+	/* background-color: rgb(23 23 23); */
+	background-color: black;
+	/* overflow: hidden; */
+	width: 100vw;
+	height: 100vh;
 }
 
 a {
@@ -26,6 +29,12 @@ a {
 
 img {
 	pointer-events: none;
+}
+
+.container {
+	margin: 0 auto;
+	width: 100%;
+	max-width: var(--container-width);
 }
 
 /* SM */

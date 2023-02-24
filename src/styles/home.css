@@ -1,0 +1,36 @@
+.navbar {
+	width: 100vw;
+	height: 100vh;
+	position: absolute;
+	overflow: auto;
+	z-index: 9999;
+	transition: transform 1s;
+}
+
+.navbar[data-expand='true'] {
+	transform: translate(0, 0);
+}
+
+.navbar[data-expand='false'] {
+	transform: translate(-100%, 0);
+}
+
+@media (min-width: 768px) {
+	.home-page {
+		display: flex;
+	}
+
+	.navbar {
+		position: unset;
+		max-width: 350px;
+		max-height: 100vh;
+	}
+
+	.navbar[data-expand='true'] {
+		transform: translate(0, 0);
+	}
+
+	.navbar[data-expand='false'] {
+		transform: translate(0, 0);
+	}
+}

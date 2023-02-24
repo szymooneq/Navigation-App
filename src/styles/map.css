@@ -2,14 +2,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 
 .leaflet-container {
-	height: 80vh;
+	height: 70vh;
 	width: 100%;
 	background-color: black;
+	position: relative;
+}
+
+.leaflet-bottom,
+.leaflet-right {
+	display: none;
 }
 
 .info {
-	position: fixed;
+	position: absolute;
 	bottom: 0;
 	left: 0;
 	z-index: 500;
+	/* color: #14b8a6; */
+	color: white;
+}
+
+@media (min-width: 768px) {
+	.leaflet-container {
+		height: 60vh;
+	}
 }

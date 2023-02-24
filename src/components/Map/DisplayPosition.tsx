@@ -2,7 +2,7 @@ import 'leaflet-routing-machine';
 import { useCallback, useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 // import { useSearchParams } from 'react-router-dom';
-import { debounce } from './lib/helpers/debounce';
+import { debounce } from '../../lib/helpers/debounce';
 
 interface props {
 	searchParams: URLSearchParams;

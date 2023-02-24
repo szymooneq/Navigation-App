@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import { useSearchParams } from 'react-router-dom';
-import DisplayPosition from './DisplayPosition';
-import Location from './Location';
-import Routing from './Routing';
+import DisplayPosition from './components/Map/DisplayPosition';
+import Location from './components/Map/Location';
+import Routing from './components/Map/Routing';
 import './styles/map.css';
 
 const DEFAULT_POSITION = [49.56364, 20.63496, 13];
@@ -54,7 +54,7 @@ function Map() {
 
 	return (
 		<>
-			{/* <MapContainer
+			<MapContainer
 				center={[+position[0], +position[1]]}
 				zoom={+position[2]}
 				zoomControl={false}
@@ -77,13 +77,33 @@ function Map() {
 					updateSearchParams={updateSearchParams}
 				/>
 				<Location />
-			</MapContainer> */}
-			<div className="leaflet-container"></div>
-			<div>
-				<h1 className="text-2xl font-bold leading-8 tracking-tight text-gray-100">
-					From: {searchParams.get('start')}
-				</h1>
-				<h1>To: {searchParams.get('end')}</h1>
+			</MapContainer>
+			{/* <div className="leaflet-container"></div> */}
+			<div className="container p-4 font-semibold tracking-tight text-gray-100">
+				<div className="mb-3 p-3 bg-zinc-900 rounded-lg">
+					<h1 className="text-3xl font-bold text-white">Route:</h1>
+					<p className="mt-2">Start: {searchParams.get('start')}</p>
+					<p className="mt-2">End: {searchParams.get('end')}</p>
+				</div>
+
+				<div className="mb-3 p-3 bg-zinc-900 rounded-lg">
+					<h1 className="text-3xl font-bold text-white">Price:</h1>
+					<p className="mt-2">Km: </p>
+					<p className="mt-2">Duration: </p>
+					<div className="flex items-center gap-2">
+						<label htmlFor="multiplier">Multiplier:</label>
+						<input
+							className="block w-full p-2 rounded-md bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
+							type="number"
+							name="multiplier"
+							id="multiplier"
+							step={1}
+							placeholder="Enter multiplier"
+						/>
+					</div>
+					<p>Total price: </p>
+				</div>
+				<h1 className="text-3xl font-bold text-white">Total:</h1>
 			</div>
 		</>
 	);
