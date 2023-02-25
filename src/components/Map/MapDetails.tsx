@@ -3,39 +3,45 @@ import { Context } from '../../lib/context/AppContext';
 
 function MapDetails() {
 	const { state } = useContext(Context);
+	const from = state.route.waypoints.start;
+	const to = state.route.waypoints.end;
 	return (
-		<div className="p-4 flex flex-row flex-wrap gap-3 h-max font-semibold tracking-tight text-gray-100">
-			<div>
+		<div className="p-3 flex flex-row flex-wrap gap-3 h-max font-semibold tracking-tight text-gray-100 md:flex-wrap md:flex-row">
+			<div className="p-3 w-full md:flex-1">
 				<h1 className="text-3xl font-bold text-[#14b8a6]">Destination:</h1>
 				<div className="mb-3 p-3 bg-zinc-900 rounded-lg">
 					<p>
 						Start:{' '}
 						<span className="font-normal text-zinc-400">
-							123 Main Street, Anytown, USA ({state.start})
+							{`${from.title} (${from.latlng[0].toFixed(
+								4
+							)}, ${from.latlng[1].toFixed(4)})`}
 						</span>
 					</p>
 					<p className="mt-2">
 						End:{' '}
 						<span className="font-normal text-zinc-400">
-							456 High Street, Cityville, Canada ({state.end})
+							{`${to.title} (${to.latlng[0].toFixed(4)}, ${to.latlng[1].toFixed(
+								4
+							)})`}
 						</span>
 					</p>
 				</div>
 			</div>
 
-			<div>
+			<div className="p-3 w-full md:flex-1">
 				<h1 className="text-3xl font-bold text-[#14b8a6]">Details:</h1>
 				<div className="mb-3 p-3 bg-zinc-900 rounded-lg">
 					<p>
 						Distance:{' '}
 						<span className="font-normal text-zinc-400">
-							{(state.distance / 1000).toFixed(1)} km
+							{(state.route.distance / 1000).toFixed(1)} km
 						</span>
 					</p>
 					<p className="mt-2">
-						Distance:{' '}
+						Duration:{' '}
 						<span className="font-normal text-zinc-400">
-							{Math.ceil(state.duration / 60)} min
+							{Math.ceil(state.route.duration / 60)} min
 						</span>
 					</p>
 					<div className="mt-1 flex items-center gap-2">
@@ -52,7 +58,7 @@ function MapDetails() {
 				</div>
 			</div>
 
-			<div>
+			<div className="p-3 w-full">
 				<h1 className="text-3xl font-bold text-[#14b8a6] whitespace-nowrap">
 					Total price: <span className="text-white">100$</span>
 				</h1>

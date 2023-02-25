@@ -27,3 +27,9 @@
 		height: 60vh;
 	}
 }
+
+@media (min-width: 1280px) {
+	.leaflet-container {
+		height: 65vh;
+	}
+}
