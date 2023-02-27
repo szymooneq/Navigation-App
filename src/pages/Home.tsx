@@ -1,45 +1,40 @@
-import L, { LatLngExpression } from 'leaflet';
 import 'leaflet-routing-machine';
 import { useContext, useEffect, useState } from 'react';
-import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import LastRouteCard from '../components/LastRouteCard';
 import Logo from '../components/Logo';
 import { Context } from '../lib/context/AppContext';
+import { convertStringToWaypoint } from '../lib/helpers/loadFromURL';
 import '../styles/home.css';
 
-const routingControl = L.Routing.control({
-	lineOptions: {
-		styles: [{ color: '#14b8a6', weight: 5 }],
-		extendToWaypoints: false,
-		missingRouteTolerance: 0
-	},
-	altLineOptions: {
-		styles: [{ color: '#14b8a530', weight: 5 }],
-		extendToWaypoints: false,
-		missingRouteTolerance: 0
-	},
-	show: false,
-	addWaypoints: false,
-	routeWhileDragging: true,
-	fitSelectedRoutes: true,
-	showAlternatives: true
-});
-
 function Home() {
-	let [searchParams, setSearchParams] = useSearchParams();
-	const { state, handleSetRoute } = useContext(Context);
+	const { state, handleSetRouteWaypoints } = useContext(Context);
 	const [homePage, setHomePage] = useState(false);
 	const [expandNav, setExpandNav] = useState(false);
-	const { pathname } = useLocation();
+	const [input, setInput] = useState({
+		startingPoint: '',
+		endingPoint: ''
+	});
+	const { pathname, search } = useLocation();
+	const navigate = useNavigate();
 
-	const handleExpandNavbar = () => {
+	/* const handleExpandNavbar = () => {
 		setExpandNav((prev) => !prev);
 	};
+ */
+	console.log(search);
 
-	const handleSetParams = (start: number[], end: number[]) => {
-		searchParams.set('start', `${start[0].toFixed(4)},${start[1].toFixed(4)}`);
-		searchParams.set('end', `${end[0].toFixed(4)},${end[1].toFixed(4)}`);
-		setSearchParams(searchParams);
+	const handleSearch = (e: React.FormEvent) => {
+		e.preventDefault();
+		const startingPoint = convertStringToWaypoint(input.startingPoint);
+		const endingPoint = convertStringToWaypoint(input.endingPoint);
+		if (startingPoint && endingPoint) {
+			handleSetRouteWaypoints([startingPoint, endingPoint]);
+		}
+	};
+
+	const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 	};
 
 	useEffect(() => {
@@ -61,26 +56,37 @@ function Home() {
 					<div className="mb-5">
 						<h1 className="text-3xl font-bold text-white">New route:</h1>
 						<div className="p-3 bg-zinc-900 rounded-lg">
-							<div className="mb-4">
-								<label htmlFor="startingPoint">Start</label>
-								<input
-									className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
-									type="text"
-									name="startingPoint"
-									id="startingPoint"
-									placeholder="E.g. 123 Main Street, Anytown, USA"
-								/>
-							</div>
-							<div>
-								<label htmlFor="endingPoint">End</label>
-								<input
-									className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
-									type="text"
-									name="endingPoint"
-									id="endingPoint"
-									placeholder="E.g. 456 High Street, Cityville, Canada"
-								/>
-							</div>
+							<form onSubmit={handleSearch}>
+								<div className="mb-4">
+									<label htmlFor="startingPoint">Start</label>
+									<input
+										className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
+										type="text"
+										name="startingPoint"
+										id="startingPoint"
+										value={input.startingPoint}
+										onChange={handleChangeValue}
+										placeholder="E.g. 123 Main Street, Anytown, USA"
+									/>
+								</div>
+								<div className="mb-4">
+									<label htmlFor="endingPoint">End</label>
+									<input
+										className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
+										type="text"
+										name="endingPoint"
+										id="endingPoint"
+										value={input.endingPoint}
+										onChange={handleChangeValue}
+										placeholder="E.g. 456 High Street, Cityville, Canada"
+									/>
+								</div>
+								<button
+									type="submit"
+									className="block w-full p-2 rounded-md font-semibold bg-[#14b8a6] text-black">
+									Search
+								</button>
+							</form>
 						</div>
 					</div>
 
@@ -91,7 +97,14 @@ function Home() {
 								<div
 									key={index}
 									onClick={() => {
-										handleSetRoute(route);
+										if (pathname === '/') {
+											navigate({
+												pathname: '/map',
+												search: `?start=${route.waypoints[0][0]},${route.waypoints[0][1]}&end=${route.waypoints[1][0]},${route.waypoints[1][1]}`
+											});
+											return;
+										}
+										handleSetRouteWaypoints(route.waypoints, route.details);
 									}}>
 									<LastRouteCard route={route} />
 								</div>

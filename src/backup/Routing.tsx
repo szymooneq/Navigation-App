@@ -3,9 +3,9 @@ import 'leaflet-routing-machine';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import { useContext, useEffect } from 'react';
 import { useMap } from 'react-leaflet';
-import { getRouteData } from '../../lib/api/getRouteData';
-import { Context } from '../../lib/context/AppContext';
-import { debounce } from '../../lib/helpers/debounce';
+import { getRouteData } from '../lib/api/getRouteData';
+import { Context } from '../lib/context/AppContext';
+import { debounce } from '../lib/helpers/debounce';
 
 function Routing() {
 	const map = useMap();
@@ -78,9 +78,11 @@ function Routing() {
 		formatter: formatter
 	});
 
-	const handleUpdateRoute = debounce(
+	const handeSaveRouteData = debounce(
 		async (e: L.Routing.RoutingResultEvent) => {
-			if (state.lastRoutes.includes(state.route)) return;
+			if (state.lastRoutes.includes(state.route)) {
+				return;
+			}
 			const startingPoint = [
 				e.waypoints[0].latLng.lat,
 				e.waypoints[0].latLng.lng
@@ -90,8 +92,8 @@ function Routing() {
 				e.waypoints[1].latLng.lng
 			];
 
-			const startingPointTitle = await getRouteData(startingPoint);
-			const endingPointTitle = await getRouteData(endingPoint);
+			/* const startingPointTitle = await getRouteData(startingPoint);
+			const endingPointTitle = await getRouteData(endingPoint); */
 
 			const routeDistance = e.routes[0].summary!.totalDistance;
 			const routeDuration = e.routes[0].summary!.totalTime;
@@ -100,11 +102,11 @@ function Routing() {
 				waypoints: {
 					start: {
 						latlng: startingPoint,
-						title: startingPointTitle
+						title: 'API Disabled'
 					},
 					end: {
 						latlng: endingPoint,
-						title: endingPointTitle
+						title: 'API Disabled'
 					}
 				},
 				distance: routeDistance,
@@ -118,11 +120,10 @@ function Routing() {
 
 	useEffect(() => {
 		if (!map) return;
-		console.log(map);
 		routingControl.addTo(map);
 
 		routingControl.on('routesfound', (e: L.Routing.RoutingResultEvent) => {
-			handleUpdateRoute(e);
+			handeSaveRouteData(e);
 		});
 
 		return () => {

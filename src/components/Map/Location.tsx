@@ -1,13 +1,10 @@
+import { createControlComponent } from '@react-leaflet/core';
 import L from 'leaflet';
 import 'leaflet.locatecontrol';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
-import { useEffect } from 'react';
-import { useMap } from 'react-leaflet';
 
-function Location(): null {
-	const map = useMap();
-
-	const location = L.control.locate({
+const createRoutineMachineLayer = () => {
+	const instance = L.control.locate({
 		flyTo: true,
 		strings: {
 			title: 'Show your location'
@@ -18,16 +15,9 @@ function Location(): null {
 		}
 	});
 
-	useEffect(() => {
-		if (!map) return;
+	return instance;
+};
 
-		location.addTo(map);
-		return () => {
-			map.removeControl(location);
-		};
-	}, []);
-
-	return null;
-}
+const Location = createControlComponent(createRoutineMachineLayer);
 
 export default Location;

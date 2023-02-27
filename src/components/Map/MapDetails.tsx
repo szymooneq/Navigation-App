@@ -3,8 +3,7 @@ import { Context } from '../../lib/context/AppContext';
 
 function MapDetails() {
 	const { state } = useContext(Context);
-	const from = state.route.waypoints.start;
-	const to = state.route.waypoints.end;
+
 	return (
 		<div className="p-3 flex flex-row flex-wrap gap-3 h-max font-semibold tracking-tight text-gray-100 md:flex-wrap md:flex-row">
 			<div className="p-3 w-full md:flex-1">
@@ -13,17 +12,13 @@ function MapDetails() {
 					<p>
 						Start:{' '}
 						<span className="font-normal text-zinc-400">
-							{`${from.title} (${from.latlng[0].toFixed(
-								4
-							)}, ${from.latlng[1].toFixed(4)})`}
+							{state.route.details.start}
 						</span>
 					</p>
 					<p className="mt-2">
 						End:{' '}
 						<span className="font-normal text-zinc-400">
-							{`${to.title} (${to.latlng[0].toFixed(4)}, ${to.latlng[1].toFixed(
-								4
-							)})`}
+							{state.route.details.end}
 						</span>
 					</p>
 				</div>
@@ -35,13 +30,13 @@ function MapDetails() {
 					<p>
 						Distance:{' '}
 						<span className="font-normal text-zinc-400">
-							{(state.route.distance / 1000).toFixed(1)} km
+							{(state.route.details.distance / 1000).toFixed(1)} km
 						</span>
 					</p>
 					<p className="mt-2">
 						Duration:{' '}
 						<span className="font-normal text-zinc-400">
-							{Math.ceil(state.route.duration / 60)} min
+							{Math.ceil(state.route.details.duration / 60)} min
 						</span>
 					</p>
 					<div className="mt-1 flex items-center gap-2">

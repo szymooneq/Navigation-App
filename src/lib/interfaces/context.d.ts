@@ -1,44 +1,56 @@
 export interface IAppContext {
 	searchParams: URLSearchParams;
 	state: ReducerState;
-	handleSetRoute: (routeInfo: IRoute) => void;
-	handleSetPosition: (positionInfo: IPosition) => void;
+	handleSetRouteWaypoints: (
+		waypoints: number[][],
+		details?: IRouteDetails
+	) => void;
+	handleSetRouteDetails: (details: IRouteDetails) => void;
+	handleSetLoading: (value: boolean) => void;
+	handleAddToLastRoutes: (
+		waypoints: number[][],
+		details: IRouteDetails
+	) => void;
 }
 
 export interface ReducerState {
-	position: IPosition;
 	route: IRoute;
 	lastRoutes: IRoute[];
-}
-
-export interface IPosition {
-	lat: number;
-	lng: number;
-	zoom: number;
+	isLoading: boolean;
 }
 
 export interface IRoute {
-	waypoints: {
-		start: IWaypoint;
-		end: IWaypoint;
-	};
+	waypoints: number[][];
+	details: IRouteDetails;
+}
+
+export interface IRouteDetails {
+	start: string;
+	end: string;
 	distance: number;
 	duration: number;
 }
 
 export type ReducerAction =
 	| {
-			type: 'setRoute';
-			payload: IRoute;
+			type: 'setRouteWaypoints';
+			payload: {
+				start: number[];
+				end: number[];
+			};
 	  }
 	| {
-			type: 'setPosition';
-			payload: IPosition;
+			type: 'setRouteDetails';
+			payload: IRouteDetails;
+	  }
+	| {
+			type: 'setLoading';
+			payload: boolean;
+	  }
+	| {
+			type: 'addToLastRoutes';
+			payload: IRoute;
 	  };
-/* | {
-			type: 'setRouteWaypointNames';
-			payload: string[];
-	  }; */
 
 interface IWaypoint {
 	latlng: number[];

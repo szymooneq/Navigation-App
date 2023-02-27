@@ -2,28 +2,34 @@ import { ReducerAction, ReducerState } from '../interfaces/context';
 
 export const appReducer = (state: ReducerState, action: ReducerAction) => {
 	switch (action.type) {
-		case 'setRoute': {
-			const route = action.payload;
-			const lastRoutes = [...state.lastRoutes];
-			if (!lastRoutes.includes(route)) lastRoutes.unshift(route);
-			if (lastRoutes.length > 5) lastRoutes.pop();
-
-			return { ...state, route: { ...route }, lastRoutes };
-		}
-		case 'setPosition': {
-			return { ...state, position: { ...action.payload } };
-		}
-		/* case 'setRouteWaypointNames': {
-			return {
-				...state,
-				route: {
-					waypoints: {
-						start: { title: action.payload[0] },
-						end: { title: action.payload[1] }
-					}
-				}
+		case 'setRouteWaypoints': {
+			const routeWithNewDetails = {
+				...state.route,
+				waypoints: [action.payload.start, action.payload.end]
 			};
-		} */
+
+			return { ...state, route: routeWithNewDetails };
+		}
+		case 'setRouteDetails': {
+			const routeDetails = action.payload;
+
+			const routeWithNewDetails = {
+				...state.route,
+				details: routeDetails
+			};
+
+			return { ...state, route: routeWithNewDetails };
+		}
+		case 'setLoading': {
+			return { ...state, isLoading: action.payload };
+		}
+		case 'addToLastRoutes': {
+			const newRoute = action.payload;
+			const newLastRoutes = [newRoute, ...state.lastRoutes];
+			if (newLastRoutes.length > 5) newLastRoutes.pop();
+
+			return { ...state, lastRoutes: newLastRoutes };
+		}
 		default:
 			return { ...state };
 	}

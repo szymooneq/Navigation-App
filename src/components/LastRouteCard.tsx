@@ -9,27 +9,23 @@ function LastRouteCard({ route }: props) {
 		<div className="mb-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700 hover:border-[#14b8a6] hover:cursor-pointer">
 			<p>
 				From:{' '}
-				<span className="font-normal text-zinc-400">
-					{route.waypoints.start.title}
-				</span>
+				<span className="font-normal text-zinc-400">{route.details.start}</span>
 			</p>
 			<p className="mt-1">
 				To:{' '}
-				<span className="font-normal text-zinc-400">
-					{route.waypoints.end.title}
-				</span>
+				<span className="font-normal text-zinc-400">{route.details.end}</span>
 			</p>
 			<div className="flex gap-3">
 				<p className="mt-1">
 					Distance:{' '}
 					<span className="font-normal text-zinc-400">
-						{(route.distance / 1000).toFixed(1)} km
+						{(route.details.distance / 1000).toFixed(1)} km
 					</span>
 				</p>
 				<p className="mt-1">
 					Duration:{' '}
 					<span className="font-normal text-zinc-400">
-						{Math.ceil(route.duration / 60)} min
+						{Math.ceil(route.details.duration / 60)} min
 					</span>
 				</p>
 			</div>
