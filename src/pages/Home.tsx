@@ -1,6 +1,6 @@
-import 'leaflet-routing-machine';
 import { useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import FormControl from '../components/Form/FormControl';
 import LastRouteCard from '../components/LastRouteCard';
 import Logo from '../components/Logo';
 import { Context } from '../lib/context/AppContext';
@@ -57,30 +57,20 @@ function Home() {
 						<h1 className="text-3xl font-bold text-white">New route:</h1>
 						<div className="p-3 bg-zinc-900 rounded-lg">
 							<form onSubmit={handleSearch}>
-								<div className="mb-4">
-									<label htmlFor="startingPoint">Start</label>
-									<input
-										className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
-										type="text"
-										name="startingPoint"
-										id="startingPoint"
-										value={input.startingPoint}
-										onChange={handleChangeValue}
-										placeholder="E.g. 123 Main Street, Anytown, USA"
-									/>
-								</div>
-								<div className="mb-4">
-									<label htmlFor="endingPoint">End</label>
-									<input
-										className="block w-full p-2 rounded-md font-normal bg-black text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
-										type="text"
-										name="endingPoint"
-										id="endingPoint"
-										value={input.endingPoint}
-										onChange={handleChangeValue}
-										placeholder="E.g. 456 High Street, Cityville, Canada"
-									/>
-								</div>
+								<FormControl
+									id="startingPoint"
+									label="Start"
+									placeholder="E.g. 123 Main Street, Anytown, USA"
+									value={input.startingPoint}
+									onChange={handleChangeValue}
+								/>
+								<FormControl
+									id="endingPoint"
+									label="End"
+									placeholder="E.g. 456 High Street, Cityville, Canada"
+									value={input.endingPoint}
+									onChange={handleChangeValue}
+								/>
 								<button
 									type="submit"
 									className="block w-full p-2 rounded-md font-semibold bg-[#14b8a6] text-black">
