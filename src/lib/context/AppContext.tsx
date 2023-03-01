@@ -32,7 +32,8 @@ function AppContext({ children }: props): JSX.Element {
 	const handleSetRouteWaypoints = debounce(
 		(waypoints: number[][], details?: IRouteDetails) => {
 			if (JSON.stringify(waypoints) === JSON.stringify(state.route.waypoints))
-				return;
+				return handleSetLoading(false);
+
 			handleSetLoading(true);
 			const startWaypoint = waypoints[0];
 			const endWaypoint = waypoints[1];
