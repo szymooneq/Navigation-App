@@ -7,7 +7,7 @@ import { Context } from '../lib/context/AppContext';
 import '../styles/home.css';
 
 function Home() {
-	const { state, handleSetRouteWaypoints } = useContext(Context);
+	const { state, handleSetRoute } = useContext(Context);
 	const [homePage, setHomePage] = useState(false);
 	const [expandNav, setExpandNav] = useState(false);
 
@@ -50,7 +50,7 @@ function Home() {
 											});
 											return;
 										}
-										handleSetRouteWaypoints(route.waypoints, route.details);
+										handleSetRoute(route.waypoints, route.details);
 									}}>
 									<LastRouteCard route={route} />
 								</div>

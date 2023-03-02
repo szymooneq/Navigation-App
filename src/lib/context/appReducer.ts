@@ -2,13 +2,13 @@ import { ReducerAction, ReducerState } from '../interfaces/context';
 
 export const appReducer = (state: ReducerState, action: ReducerAction) => {
 	switch (action.type) {
-		case 'setRouteWaypoints': {
-			const routeWithNewDetails = {
+		case 'setRoute': {
+			const newRoute = {
 				...state.route,
-				waypoints: [action.payload.start, action.payload.end]
+				waypoints: action.payload
 			};
 
-			return { ...state, route: routeWithNewDetails };
+			return { ...state, route: newRoute };
 		}
 		case 'setRouteDetails': {
 			const routeDetails = action.payload;

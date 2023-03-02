@@ -2,7 +2,11 @@ import { createContext, useEffect, useReducer } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { debounce } from '../helpers/debounce';
 import { loadRouteWaypointsFromURL } from '../helpers/loadFromURL';
-import { IAppContext, IRouteDetails } from '../interfaces/context';
+import {
+	IAppContext,
+	IRouteDetails,
+	IRouteWaypoints
+} from '../interfaces/context';
 import { appReducer } from './appReducer';
 
 export const Context = createContext({} as IAppContext);
@@ -13,10 +17,17 @@ interface props {
 
 const INITIAL_STATE = {
 	route: {
-		waypoints: [],
+		waypoints: {
+			startingPoint: {
+				name: '',
+				position: []
+			},
+			endingPoint: {
+				name: '',
+				position: []
+			}
+		},
 		details: {
-			start: '',
-			end: '',
 			distance: 0,
 			duration: 0
 		}
@@ -29,25 +40,32 @@ function AppContext({ children }: props): JSX.Element {
 	let [searchParams, setSearchParams] = useSearchParams();
 	const [state, dispatch] = useReducer(appReducer, INITIAL_STATE);
 
-	const handleSetRouteWaypoints = debounce(
-		(waypoints: number[][], details?: IRouteDetails) => {
-			if (JSON.stringify(waypoints) === JSON.stringify(state.route.waypoints))
-				return handleSetLoading(false);
+	const handleSetRoute = debounce(
+		(waypoints: IRouteWaypoints, details?: IRouteDetails) => {
+			// if (JSON.stringify(waypoints) === JSON.stringify(state.route.waypoints)) return handleSetLoading(false);
 
 			handleSetLoading(true);
-			const startWaypoint = waypoints[0];
-			const endWaypoint = waypoints[1];
-
-			searchParams.set('start', `${startWaypoint[0]},${startWaypoint[1]}`);
-			searchParams.set('end', `${endWaypoint[0]},${endWaypoint[1]}`);
-
-			setSearchParams(searchParams);
-			dispatch({
-				type: 'setRouteWaypoints',
-				payload: { start: startWaypoint, end: endWaypoint }
-			});
 
 			if (details) handleSetRouteDetails(details);
+
+			const startingPoint = waypoints.startingPoint;
+			const endingPoint = waypoints.endingPoint;
+
+			searchParams.set(
+				'start',
+				`${startingPoint.position[0]},${startingPoint.position[1]}`
+			);
+			searchParams.set(
+				'end',
+				`${endingPoint.position[0]},${endingPoint.position[1]}`
+			);
+
+			setSearchParams(searchParams);
+
+			dispatch({
+				type: 'setRoute',
+				payload: waypoints
+			});
 		},
 		500
 	);
@@ -74,7 +92,7 @@ function AppContext({ children }: props): JSX.Element {
 
 	const fetchData = () => {
 		const waypointsFromURL = loadRouteWaypointsFromURL(searchParams);
-		if (waypointsFromURL.length) handleSetRouteWaypoints(waypointsFromURL);
+		if (waypointsFromURL.length) handleSetRoute(waypointsFromURL);
 	};
 
 	useEffect(() => {
@@ -86,7 +104,7 @@ function AppContext({ children }: props): JSX.Element {
 			value={{
 				state,
 				searchParams,
-				handleSetRouteWaypoints,
+				handleSetRoute,
 				handleSetRouteDetails,
 				handleSetLoading,
 				handleAddToLastRoutes

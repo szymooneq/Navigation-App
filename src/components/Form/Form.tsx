@@ -4,8 +4,7 @@ import { Context } from '../../lib/context/AppContext';
 import FormControl from './FormControl';
 
 function Form() {
-	const { state, handleSetLoading, handleSetRouteWaypoints } =
-		useContext(Context);
+	const { state, handleSetLoading, handleSetRoute } = useContext(Context);
 	const [values, setValues] = useState({
 		startingPoint: '',
 		endingPoint: ''
@@ -37,7 +36,7 @@ function Form() {
 		const endingPoint = await forwardGeocoder(values.endingPoint);
 
 		if (startingPoint && endingPoint) {
-			return handleSetRouteWaypoints([
+			return handleSetRoute([
 				[startingPoint.lat, startingPoint.lng],
 				[endingPoint.lat, endingPoint.lng]
 			]);

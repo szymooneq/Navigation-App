@@ -1,10 +1,7 @@
 export interface IAppContext {
 	searchParams: URLSearchParams;
 	state: ReducerState;
-	handleSetRouteWaypoints: (
-		waypoints: number[][],
-		details?: IRouteDetails
-	) => void;
+	handleSetRoute: (waypoints: number[][], details?: IRouteDetails) => void;
 	handleSetRouteDetails: (details: IRouteDetails) => void;
 	handleSetLoading: (value: boolean) => void;
 	handleAddToLastRoutes: (
@@ -20,24 +17,29 @@ export interface ReducerState {
 }
 
 export interface IRoute {
-	waypoints: number[][];
+	waypoints: IRouteWaypoints;
 	details: IRouteDetails;
 }
 
+export interface IRouteWaypoints {
+	startingPoint: IRouteWaypoint;
+	endingPoint: IRouteWaypoint;
+}
+
+interface IRouteWaypoint {
+	name: string;
+	position: number[][];
+}
+
 export interface IRouteDetails {
-	start: string;
-	end: string;
 	distance: number;
 	duration: number;
 }
 
 export type ReducerAction =
 	| {
-			type: 'setRouteWaypoints';
-			payload: {
-				start: number[];
-				end: number[];
-			};
+			type: 'setRoute';
+			payload: IRouteWaypoints;
 	  }
 	| {
 			type: 'setRouteDetails';
@@ -51,8 +53,3 @@ export type ReducerAction =
 			type: 'addToLastRoutes';
 			payload: IRoute;
 	  };
-
-interface IWaypoint {
-	latlng: number[];
-	title: string;
-}
