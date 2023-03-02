@@ -9,11 +9,15 @@ function LastRouteCard({ route }: props) {
 		<div className="mb-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700 hover:border-[#14b8a6] hover:cursor-pointer">
 			<p>
 				From:{' '}
-				<span className="font-normal text-zinc-400">{route.details.start}</span>
+				<span className="font-normal text-zinc-400">
+					{route.waypoints.startingPoint.name}
+				</span>
 			</p>
 			<p className="mt-1">
 				To:{' '}
-				<span className="font-normal text-zinc-400">{route.details.end}</span>
+				<span className="font-normal text-zinc-400">
+					{route.waypoints.endingPoint.name}
+				</span>
 			</p>
 			<div className="flex gap-3">
 				<p className="mt-1">

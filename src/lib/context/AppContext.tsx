@@ -1,9 +1,11 @@
 import { createContext, useEffect, useReducer } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { getRouteData } from '../api/getRouteData';
 import { debounce } from '../helpers/debounce';
 import { loadRouteWaypointsFromURL } from '../helpers/loadFromURL';
 import {
 	IAppContext,
+	IRoute,
 	IRouteDetails,
 	IRouteWaypoints
 } from '../interfaces/context';
@@ -42,23 +44,17 @@ function AppContext({ children }: props): JSX.Element {
 
 	const handleSetRoute = debounce(
 		(waypoints: IRouteWaypoints, details?: IRouteDetails) => {
-			// if (JSON.stringify(waypoints) === JSON.stringify(state.route.waypoints)) return handleSetLoading(false);
+			if (JSON.stringify(waypoints) === JSON.stringify(state.route.waypoints))
+				return handleSetLoading(false);
 
-			handleSetLoading(true);
-
-			if (details) handleSetRouteDetails(details);
-
-			const startingPoint = waypoints.startingPoint;
-			const endingPoint = waypoints.endingPoint;
+			const startingPosition = waypoints.startingPoint.position;
+			const endingPosition = waypoints.endingPoint.position;
 
 			searchParams.set(
 				'start',
-				`${startingPoint.position[0]},${startingPoint.position[1]}`
+				`${startingPosition[0]},${startingPosition[1]}`
 			);
-			searchParams.set(
-				'end',
-				`${endingPoint.position[0]},${endingPoint.position[1]}`
-			);
+			searchParams.set('end', `${endingPosition[0]},${endingPosition[1]}`);
 
 			setSearchParams(searchParams);
 
@@ -72,31 +68,58 @@ function AppContext({ children }: props): JSX.Element {
 
 	const handleSetRouteDetails = (details: IRouteDetails) => {
 		dispatch({ type: 'setRouteDetails', payload: details });
-		handleSetLoading(false);
+		handleAddToLastRoutes(state.route.waypoints, details);
 	};
 
 	const handleAddToLastRoutes = (
-		waypoints: number[][],
+		waypoints: IRouteWaypoints,
 		details: IRouteDetails
 	) => {
-		const newLastRoute = {
-			waypoints: waypoints,
-			details: details
+		let isContain = false;
+
+		const newRoute = {
+			waypoints,
+			details
 		};
-		dispatch({ type: 'addToLastRoutes', payload: newLastRoute });
+
+		state.lastRoutes.map((value) => {
+			if (JSON.stringify(value) === JSON.stringify(newRoute)) isContain = true;
+		});
+
+		if (!isContain) {
+			dispatch({ type: 'addToLastRoutes', payload: newRoute });
+		}
 	};
 
 	const handleSetLoading = (value: boolean) => {
 		dispatch({ type: 'setLoading', payload: value });
 	};
 
-	const fetchData = () => {
+	const getDataFromURL = async () => {
 		const waypointsFromURL = loadRouteWaypointsFromURL(searchParams);
-		if (waypointsFromURL.length) handleSetRoute(waypointsFromURL);
+
+		if (waypointsFromURL.length) {
+			handleSetLoading(true);
+			const startingPointName = await getRouteData(waypointsFromURL[0]);
+			const endingPointName = await getRouteData(waypointsFromURL[1]);
+
+			const waypoints = {
+				startingPoint: {
+					name: startingPointName.address.label,
+					position: waypointsFromURL[0]
+				},
+				endingPoint: {
+					name: endingPointName.address.label,
+					position: waypointsFromURL[1]
+				}
+			};
+
+			handleSetRoute(waypoints);
+		}
 	};
 
 	useEffect(() => {
-		fetchData();
+		getDataFromURL();
 	}, []);
 
 	return (

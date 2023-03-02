@@ -34,7 +34,7 @@ const createRoutineMachineLayer = (props: any) => {
 			if (i === n - 1) marker_icon = endIcon;
 
 			const marker = L.marker(waypoint.latLng, {
-				draggable: false,
+				draggable: true,
 				icon: marker_icon
 			});
 
@@ -55,7 +55,7 @@ const createRoutineMachineLayer = (props: any) => {
 		},
 		show: false,
 		addWaypoints: false,
-		routeWhileDragging: false,
+		routeWhileDragging: true,
 		fitSelectedRoutes: true,
 		showAlternatives: true,
 		plan: plan

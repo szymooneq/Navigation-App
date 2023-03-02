@@ -71,7 +71,6 @@ function FormControl({
 			<label htmlFor={id}>{label}</label>
 			<div className={` relative `} ref={autocompleteRef}>
 				<input
-					// className="block w-full p-2 rounded-md font-normal bg-transparent text-white focus:border-transparent focus:outline-none focus:ring-2 focus:ring-[#14b8a6]"
 					className={`p-2 w-full bg-black focus:outline-none z-10 ${
 						showSuggsestions && suggestions.length > 0
 							? 'rounded-t-md'
@@ -86,15 +85,12 @@ function FormControl({
 					placeholder={placeholder}
 					autoComplete="off"
 				/>
-				{/* rounded-md w-full absolute top-10 left-0 right-0 bg-black z-50 border-2 */}
 				{showSuggsestions && suggestions.length > 0 && (
 					<ul
-						// className="block p-2 w-full max-h-56 border-zinc-900 border rounded-md font-normal bg-black text-white absolute top-10 right-0 z-20 overflow-scroll"
 						className="p-1 block w-full max-h-48 absolute border-t border-zinc-900 rounded-b-md font-normal bg-black text-white z-50 overflow-auto"
 						tabIndex={-1}>
 						{suggestions.map((suggestion) => (
 							<li
-								// className=" rounded-md truncate cursor-pointer hover:bg-[#14b8a6] hover:text-black"
 								className="p-1 pt-2 pb-2 truncate rounded-md text-zinc-400 hover:bg-[#14b8a6] hover:text-black cursor-pointer"
 								onClick={() => {
 									handleSetValueFromSuggestion(id, suggestion.address.label);

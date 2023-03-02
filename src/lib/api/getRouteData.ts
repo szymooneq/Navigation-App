@@ -7,7 +7,7 @@ export const getRouteData = async (coordinates: number[]): Promise<string> => {
 		`https://revgeocode.search.hereapi.com/v1/revgeocode?at=${coordinates[0]},${coordinates[1]}&apiKey=${apiKey}`
 	)
 		.then((res) => res.json())
-		.then((data) => data.items[0].title)
+		.then((data) => data.items[0])
 		.catch((error) => console.log(error));
 };
 
@@ -25,6 +25,6 @@ export const forwardGeocoder = async (value: string): Promise<any> => {
 		`https://geocode.search.hereapi.com/v1/geocode?q=${value}&apiKey=${apiKey}`
 	)
 		.then((res) => res.json())
-		.then((data) => data.items[0].position)
+		.then((data) => data.items[0])
 		.catch((error) => console.log(error));
 };

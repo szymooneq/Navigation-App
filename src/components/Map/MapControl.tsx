@@ -10,15 +10,10 @@ import DisplayPosition from './DisplayPosition';
 import Location from './Location';
 import RoutingMachine from './RoutingMachine';
 
-const compareArrays = (array: IRoute[], nestedArray: IRoute) => {
-	let isContained = false;
-
-	array.map((x) => {
-		if (JSON.stringify(nestedArray.waypoints) === JSON.stringify(x.waypoints))
-			isContained = true;
-	});
-
-	return isContained;
+const isEqual = (firstArray: number[], secondArray: number[]) => {
+	return JSON.stringify(firstArray) === JSON.stringify(secondArray)
+		? true
+		: false;
 };
 
 function MapControl() {
@@ -26,49 +21,62 @@ function MapControl() {
 		state,
 		handleSetRouteDetails,
 		handleSetLoading,
+		handleSetRoute,
 		handleAddToLastRoutes
 	} = useContext(Context);
 	const rMachine = useRef<L.Routing.Control>();
 
-	const handleGetRouteDetails = debounce(
-		async (e: L.Routing.RoutingResultEvent) => {
-			if (compareArrays(state.lastRoutes, state.route)) {
-				handleSetLoading(false);
-				return;
-			}
+	const handleCalculateRoute = async (e: L.Routing.RoutingResultEvent) => {
+		const currentStartingPosition =
+			state.route.waypoints.startingPoint.position;
+		const currentEndingPosition = state.route.waypoints.endingPoint.position;
+		const updatedStartingPosition = [
+			e.waypoints[0].latLng.lat,
+			e.waypoints[0].latLng.lng
+		];
+		const updatedEndingPosition = [
+			e.waypoints[1].latLng.lat,
+			e.waypoints[1].latLng.lng
+		];
 
-			const startPointCoords = [
-				e.waypoints[0].latLng.lat,
-				e.waypoints[0].latLng.lng
-			];
-			const endPointCoords = [
-				e.waypoints[1].latLng.lat,
-				e.waypoints[1].latLng.lng
-			];
+		if (
+			!isEqual(currentStartingPosition, updatedStartingPosition) ||
+			!isEqual(currentEndingPosition, updatedEndingPosition)
+		) {
+			handleSetLoading(true);
+			const newStartingPointName = await getRouteData(updatedStartingPosition);
+			const newEndingPointName = await getRouteData(updatedEndingPosition);
 
-			const startPointTitle = await getRouteData(startPointCoords);
-			const endPointTitle = await getRouteData(endPointCoords);
-
-			const routeDistance = e.routes[0].summary!.totalDistance;
-			const routeDuration = e.routes[0].summary!.totalTime;
-
-			const updatedDetails = {
-				start: startPointTitle,
-				end: endPointTitle,
-				distance: routeDistance,
-				duration: routeDuration
+			const waypoints = {
+				startingPoint: {
+					name: newStartingPointName.address.label,
+					position: updatedStartingPosition
+				},
+				endingPoint: {
+					name: newEndingPointName.address.label,
+					position: updatedEndingPosition
+				}
 			};
 
-			handleAddToLastRoutes([startPointCoords, endPointCoords], updatedDetails);
-			handleSetRouteDetails(updatedDetails);
-		},
-		500
-	);
+			return handleSetRoute(waypoints);
+		}
+
+		const routeDistance = e.routes[0].summary!.totalDistance;
+		const routeDuration = e.routes[0].summary!.totalTime;
+
+		const routeDetails = {
+			distance: routeDistance,
+			duration: routeDuration
+		};
+
+		handleSetRouteDetails(routeDetails);
+		handleSetLoading(false);
+	};
 
 	useEffect(() => {
 		if (rMachine.current) {
 			rMachine.current.on('routesfound', (e: L.Routing.RoutingResultEvent) => {
-				handleGetRouteDetails(e);
+				handleCalculateRoute(e);
 			});
 		}
 	}, [state.route.waypoints]);
@@ -90,8 +98,16 @@ function MapControl() {
 			<DisplayPosition />
 			<RoutingMachine
 				ref={rMachine as React.Ref<L.Routing.Control> | undefined}
-				key={state.route.waypoints as any}
-				waypoints={state.route.waypoints}
+				key={
+					[
+						state.route.waypoints.startingPoint.position,
+						state.route.waypoints.endingPoint.position
+					] as any
+				}
+				waypoints={[
+					state.route.waypoints.startingPoint.position,
+					state.route.waypoints.endingPoint.position
+				]}
 			/>
 			<Location />
 		</MapContainer>

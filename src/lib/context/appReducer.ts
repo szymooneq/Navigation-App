@@ -13,19 +13,18 @@ export const appReducer = (state: ReducerState, action: ReducerAction) => {
 		case 'setRouteDetails': {
 			const routeDetails = action.payload;
 
-			const routeWithNewDetails = {
+			const routeWithUpdatedDetails = {
 				...state.route,
 				details: routeDetails
 			};
 
-			return { ...state, route: routeWithNewDetails };
+			return { ...state, route: routeWithUpdatedDetails };
 		}
 		case 'setLoading': {
 			return { ...state, isLoading: action.payload };
 		}
 		case 'addToLastRoutes': {
-			const newRoute = action.payload;
-			const newLastRoutes = [newRoute, ...state.lastRoutes];
+			const newLastRoutes = [action.payload, ...state.lastRoutes];
 			if (newLastRoutes.length > 5) newLastRoutes.pop();
 
 			return { ...state, lastRoutes: newLastRoutes };

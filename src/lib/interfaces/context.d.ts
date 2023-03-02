@@ -1,11 +1,11 @@
 export interface IAppContext {
 	searchParams: URLSearchParams;
 	state: ReducerState;
-	handleSetRoute: (waypoints: number[][], details?: IRouteDetails) => void;
+	handleSetRoute: (waypoints: IRouteWaypoints, details?: IRouteDetails) => void;
 	handleSetRouteDetails: (details: IRouteDetails) => void;
 	handleSetLoading: (value: boolean) => void;
 	handleAddToLastRoutes: (
-		waypoints: number[][],
+		waypoints: IRouteWaypoints,
 		details: IRouteDetails
 	) => void;
 }
@@ -28,7 +28,7 @@ export interface IRouteWaypoints {
 
 interface IRouteWaypoint {
 	name: string;
-	position: number[][];
+	position: number[];
 }
 
 export interface IRouteDetails {

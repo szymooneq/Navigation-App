@@ -4,15 +4,35 @@ import Form from '../components/Form/Form';
 import LastRouteCard from '../components/LastRouteCard';
 import Logo from '../components/Logo';
 import { Context } from '../lib/context/AppContext';
+import { IRoute } from '../lib/interfaces/context';
 import '../styles/home.css';
 
 function Home() {
-	const { state, handleSetRoute } = useContext(Context);
+	const { state, handleSetRoute, handleSetLoading } = useContext(Context);
 	const [homePage, setHomePage] = useState(false);
 	const [expandNav, setExpandNav] = useState(false);
-
 	const { pathname } = useLocation();
 	const navigate = useNavigate();
+
+	const handleChangeRoute = (route: IRoute) => {
+		if (pathname === '/') {
+			const startingPosition = route.waypoints.startingPoint.position;
+			const endingPosition = route.waypoints.endingPoint.position;
+
+			return navigate({
+				pathname: '/map',
+				search: `?start=${startingPosition[0]},${startingPosition[1]}&end=${endingPosition[0]},${endingPosition[1]}`
+			});
+		}
+
+		if (
+			JSON.stringify(route.waypoints) === JSON.stringify(state.route.waypoints)
+		)
+			return;
+
+		handleSetLoading(true);
+		handleSetRoute(route.waypoints, route.details);
+	};
 
 	useEffect(() => {
 		if (expandNav) document.documentElement.style.position = 'fixed';
@@ -40,18 +60,7 @@ function Home() {
 						<h1 className="text-3xl font-bold text-white">Last routes:</h1>
 						{state.lastRoutes.map((route, index) => {
 							return (
-								<div
-									key={index}
-									onClick={() => {
-										if (pathname === '/') {
-											navigate({
-												pathname: '/map',
-												search: `?start=${route.waypoints[0][0]},${route.waypoints[0][1]}&end=${route.waypoints[1][0]},${route.waypoints[1][1]}`
-											});
-											return;
-										}
-										handleSetRoute(route.waypoints, route.details);
-									}}>
+								<div key={index} onClick={() => handleChangeRoute(route)}>
 									<LastRouteCard route={route} />
 								</div>
 							);

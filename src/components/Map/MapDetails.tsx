@@ -12,13 +12,13 @@ function MapDetails() {
 					<p>
 						Start:{' '}
 						<span className="font-normal text-zinc-400">
-							{state.route.details.start}
+							{state.route.waypoints.startingPoint.name}
 						</span>
 					</p>
 					<p className="mt-2">
 						End:{' '}
 						<span className="font-normal text-zinc-400">
-							{state.route.details.end}
+							{state.route.waypoints.endingPoint.name}
 						</span>
 					</p>
 				</div>

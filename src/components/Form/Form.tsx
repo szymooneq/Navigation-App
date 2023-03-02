@@ -23,25 +23,31 @@ function Form() {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-		if (
-			!values.startingPoint ||
-			values.startingPoint === state.route.details.start ||
-			!values.endingPoint ||
-			values.endingPoint === state.route.details.end
-		)
-			return;
+		if (!values.startingPoint && !values.endingPoint) return;
 
 		handleSetLoading(true);
-		const startingPoint = await forwardGeocoder(values.startingPoint);
-		const endingPoint = await forwardGeocoder(values.endingPoint);
+		const startingPointData = await forwardGeocoder(values.startingPoint);
+		const endingPointData = await forwardGeocoder(values.endingPoint);
 
-		if (startingPoint && endingPoint) {
-			return handleSetRoute([
-				[startingPoint.lat, startingPoint.lng],
-				[endingPoint.lat, endingPoint.lng]
-			]);
+		if (startingPointData && endingPointData) {
+			const waypoints = {
+				startingPoint: {
+					name: startingPointData.address.label,
+					position: [
+						startingPointData.position.lat,
+						startingPointData.position.lng
+					]
+				},
+				endingPoint: {
+					name: endingPointData.address.label,
+					position: [endingPointData.position.lat, endingPointData.position.lng]
+				}
+			};
+
+			return handleSetRoute(waypoints);
 		}
 
+		// TODO: setError
 		return handleSetLoading(false);
 	};
 
