@@ -2,7 +2,7 @@ import 'leaflet-routing-machine';
 import { useCallback, useEffect, useState } from 'react';
 import { useMap } from 'react-leaflet';
 
-function DisplayPosition() {
+function DisplayPosition(): JSX.Element {
 	const map = useMap();
 	const [position, setPosition] = useState(() => map.getCenter());
 

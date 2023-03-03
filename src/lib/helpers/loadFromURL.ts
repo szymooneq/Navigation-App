@@ -1,4 +1,4 @@
-export const convertStringToWaypoint = (stringCoordinates: string) => {
+const convertStringToWaypoint = (stringCoordinates: string) => {
 	const arrayWithCoordinates = stringCoordinates
 		.split(',')
 		.map((x) => +x)
@@ -7,7 +7,7 @@ export const convertStringToWaypoint = (stringCoordinates: string) => {
 	if (arrayWithCoordinates.length === 2) return arrayWithCoordinates;
 };
 
-export const loadRouteWaypointsFromURL = (params: URLSearchParams) => {
+export const loadWaypointsFromURL = (params: URLSearchParams) => {
 	const startParams = params.get('start');
 	const endParams = params.get('end');
 

@@ -1,7 +1,7 @@
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom';
 
-function Logo() {
+function Logo(): JSX.Element {
 	return (
 		<Link
 			to="/"

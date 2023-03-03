@@ -4,7 +4,7 @@ interface props {
 	route: IRoute;
 }
 
-function LastRouteCard({ route }: props) {
+function LastRouteCard({ route }: props): JSX.Element {
 	return (
 		<div className="mb-3 p-3 bg-zinc-900 rounded-lg border border-zinc-700 hover:border-[#14b8a6] hover:cursor-pointer">
 			<p>

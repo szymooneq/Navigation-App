@@ -57,7 +57,7 @@ const createRoutineMachineLayer = (props: any) => {
 		addWaypoints: false,
 		routeWhileDragging: true,
 		fitSelectedRoutes: true,
-		showAlternatives: true,
+		showAlternatives: false,
 		plan: plan
 	});
 

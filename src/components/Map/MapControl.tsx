@@ -1,64 +1,62 @@
 import L from 'leaflet';
 import React, { useContext, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { getRouteData } from '../../lib/api/getRouteData';
-import { Context } from '../../lib/context/AppContext';
-import { debounce } from '../../lib/helpers/debounce';
-import { IRoute } from '../../lib/interfaces/context';
+import { getReverseData } from '../../lib/api/getFromHereAPI';
+import { RouteContext } from '../../lib/context/RouteProvider';
+import { areEqual } from '../../lib/helpers/areEqual';
 import '../../styles/map.css';
 import DisplayPosition from './DisplayPosition';
 import Location from './Location';
 import RoutingMachine from './RoutingMachine';
 
-const isEqual = (firstArray: number[], secondArray: number[]) => {
-	return JSON.stringify(firstArray) === JSON.stringify(secondArray)
-		? true
-		: false;
+const getNewAddress = async (position: number[]) => {
+	const newData = await getReverseData(position);
+	return newData[0].address.label;
 };
 
-function MapControl() {
-	const {
-		state,
-		handleSetRouteDetails,
-		handleSetLoading,
-		handleSetRoute,
-		handleAddToLastRoutes
-	} = useContext(Context);
+function MapControl(): JSX.Element {
+	const { state, setRouteDetails, setLoading, setRoute } =
+		useContext(RouteContext);
 	const rMachine = useRef<L.Routing.Control>();
+	const currentWaypoints = state.route.waypoints;
 
 	const handleCalculateRoute = async (e: L.Routing.RoutingResultEvent) => {
-		const currentStartingPosition =
-			state.route.waypoints.startingPoint.position;
-		const currentEndingPosition = state.route.waypoints.endingPoint.position;
-		const updatedStartingPosition = [
+		const currentStartPos = currentWaypoints.startingPoint.position;
+		const currentEndPos = currentWaypoints.endingPoint.position;
+		const updatedStarPos = [
 			e.waypoints[0].latLng.lat,
 			e.waypoints[0].latLng.lng
 		];
-		const updatedEndingPosition = [
+		const updatedEndPos = [
 			e.waypoints[1].latLng.lat,
 			e.waypoints[1].latLng.lng
 		];
 
-		if (
-			!isEqual(currentStartingPosition, updatedStartingPosition) ||
-			!isEqual(currentEndingPosition, updatedEndingPosition)
-		) {
-			handleSetLoading(true);
-			const newStartingPointName = await getRouteData(updatedStartingPosition);
-			const newEndingPointName = await getRouteData(updatedEndingPosition);
+		const areStartEqual = areEqual(currentStartPos, updatedStarPos);
+		const areEndEqual = areEqual(currentEndPos, updatedEndPos);
+
+		if (!areStartEqual || !areEndEqual) {
+			setLoading(true);
+			const updatedStartName = !areStartEqual
+				? await getNewAddress(updatedStarPos)
+				: currentWaypoints.startingPoint.name;
+
+			const updatedEndName = !areEndEqual
+				? await getNewAddress(updatedEndPos)
+				: currentWaypoints.endingPoint.name;
 
 			const waypoints = {
 				startingPoint: {
-					name: newStartingPointName.address.label,
-					position: updatedStartingPosition
+					name: updatedStartName,
+					position: updatedStarPos
 				},
 				endingPoint: {
-					name: newEndingPointName.address.label,
-					position: updatedEndingPosition
+					name: updatedEndName,
+					position: updatedEndPos
 				}
 			};
 
-			return handleSetRoute(waypoints);
+			return setRoute(waypoints);
 		}
 
 		const routeDistance = e.routes[0].summary!.totalDistance;
@@ -69,8 +67,8 @@ function MapControl() {
 			duration: routeDuration
 		};
 
-		handleSetRouteDetails(routeDetails);
-		handleSetLoading(false);
+		setRouteDetails(routeDetails);
+		setLoading(false);
 	};
 
 	useEffect(() => {
@@ -79,7 +77,7 @@ function MapControl() {
 				handleCalculateRoute(e);
 			});
 		}
-	}, [state.route.waypoints]);
+	}, [currentWaypoints]);
 
 	return (
 		<MapContainer
@@ -89,24 +87,24 @@ function MapControl() {
 			scrollWheelZoom={true}>
 			<TileLayer
 				attribution='<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				url="https://{s}.tile.jawg.io/jawg-dark/{z}/{x}/{y}{r}.png?access-token={accessToken}"
+				url={import.meta.env.VITE_MAPBOX_TILES}
 				minZoom={0}
 				maxZoom={22}
-				subdomains="abcd"
-				accessToken="PyTJUlEU1OPJwCJlW1k0NC8JIt2CALpyuj7uc066O7XbdZCjWEL3WYJIk6dnXtps"
+				// subdomains="abcd"
+				// accessToken="PyTJUlEU1OPJwCJlW1k0NC8JIt2CALpyuj7uc066O7XbdZCjWEL3WYJIk6dnXtps"
 			/>
 			<DisplayPosition />
 			<RoutingMachine
 				ref={rMachine as React.Ref<L.Routing.Control> | undefined}
 				key={
 					[
-						state.route.waypoints.startingPoint.position,
-						state.route.waypoints.endingPoint.position
+						currentWaypoints.startingPoint.position,
+						currentWaypoints.endingPoint.position
 					] as any
 				}
 				waypoints={[
-					state.route.waypoints.startingPoint.position,
-					state.route.waypoints.endingPoint.position
+					currentWaypoints.startingPoint.position,
+					currentWaypoints.endingPoint.position
 				]}
 			/>
 			<Location />

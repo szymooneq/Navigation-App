@@ -1,37 +1,25 @@
 import { useContext, useEffect, useState } from 'react';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Form from '../components/Form/Form';
 import LastRouteCard from '../components/LastRouteCard';
 import Logo from '../components/Logo';
-import { Context } from '../lib/context/AppContext';
+import { RouteContext } from '../lib/context/RouteProvider';
+import { areEqual } from '../lib/helpers/areEqual';
 import { IRoute } from '../lib/interfaces/context';
 import '../styles/home.css';
 
 function Home() {
-	const { state, handleSetRoute, handleSetLoading } = useContext(Context);
+	const { state, setRoute, setLoading } = useContext(RouteContext);
 	const [homePage, setHomePage] = useState(false);
 	const [expandNav, setExpandNav] = useState(false);
 	const { pathname } = useLocation();
-	const navigate = useNavigate();
 
 	const handleChangeRoute = (route: IRoute) => {
-		if (pathname === '/') {
-			const startingPosition = route.waypoints.startingPoint.position;
-			const endingPosition = route.waypoints.endingPoint.position;
-
-			return navigate({
-				pathname: '/map',
-				search: `?start=${startingPosition[0]},${startingPosition[1]}&end=${endingPosition[0]},${endingPosition[1]}`
-			});
-		}
-
-		if (
-			JSON.stringify(route.waypoints) === JSON.stringify(state.route.waypoints)
-		)
+		if (areEqual(route.waypoints, state.route.waypoints) && pathname !== '/')
 			return;
 
-		handleSetLoading(true);
-		handleSetRoute(route.waypoints, route.details);
+		setLoading(true);
+		setRoute(route.waypoints);
 	};
 
 	useEffect(() => {

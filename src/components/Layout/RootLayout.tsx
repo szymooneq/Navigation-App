@@ -1,13 +1,11 @@
 import { Outlet } from 'react-router-dom';
-import AppContext from '../../lib/context/AppContext';
-import Spinner from '../Spinner/Spinner';
+import RouteProvider from '../../lib/context/RouteProvider';
 
-function RootLayout() {
+function RootLayout(): JSX.Element {
 	return (
-		<AppContext>
-			<Spinner />
+		<RouteProvider>
 			<Outlet />
-		</AppContext>
+		</RouteProvider>
 	);
 }
 

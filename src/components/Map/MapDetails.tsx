@@ -1,8 +1,8 @@
 import { useContext } from 'react';
-import { Context } from '../../lib/context/AppContext';
+import { RouteContext } from '../../lib/context/RouteProvider';
 
-function MapDetails() {
-	const { state } = useContext(Context);
+function MapDetails(): JSX.Element {
+	const { state } = useContext(RouteContext);
 
 	return (
 		<div className="p-3 flex flex-row flex-wrap gap-3 h-max font-semibold tracking-tight text-gray-100 md:flex-wrap md:flex-row">

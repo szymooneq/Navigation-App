@@ -1,13 +1,8 @@
 export interface IAppContext {
-	searchParams: URLSearchParams;
 	state: ReducerState;
-	handleSetRoute: (waypoints: IRouteWaypoints, details?: IRouteDetails) => void;
-	handleSetRouteDetails: (details: IRouteDetails) => void;
-	handleSetLoading: (value: boolean) => void;
-	handleAddToLastRoutes: (
-		waypoints: IRouteWaypoints,
-		details: IRouteDetails
-	) => void;
+	setRoute: (waypoints: IRouteWaypoints) => void;
+	setRouteDetails: (details: IRouteDetails) => void;
+	setLoading: (value: boolean) => void;
 }
 
 export interface ReducerState {

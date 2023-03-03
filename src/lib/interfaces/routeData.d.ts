@@ -1,42 +1,67 @@
-export interface IRouteDataApi {
+interface Base {
 	title: string;
 	id: string;
-	politicalView?: string;
-	resultType?:
-		| 'administrativeArea'
-		| 'locality'
-		| 'street'
-		| 'intersection'
-		| 'addressBlock'
-		| 'houseNumber'
-		| 'postalCodePoint'
-		| 'place';
-	houseNumberType?: 'PA' | 'interpolated';
-	addressBlockType?: 'block' | 'subblock';
-	localityType?: 'postalCode' | 'subdistrict' | 'district' | 'city';
-	administrativeAreaType?: 'county' | 'state' | 'country';
+	resultType: string;
 	address: {
-		label?: string;
-		countryCode?: string;
-		countryName?: string;
-		stateCode?: string;
-		state?: string;
-		countyCode?: string;
-		county?: string;
-		city?: string;
-		district?: string;
-		subdistrict?: string;
-		street?: string;
-		block?: string;
-		subblock?: string;
-		postalCode?: string;
-		houseNumber?: string;
-		building?: string;
+		label: string;
+		countryCode: string;
+		countryName: string;
+		state: string;
+		county: string;
+		city: string;
+		district: string;
+		street: string;
+		postalCode: string;
 	};
-	position: IRouteDataPosition;
 }
 
-interface IRouteDataPosition {
+export interface IReverseResponseAPI extends Base {
+	position: IPosition;
+	mapView: IMapView;
+	distance: number;
+}
+
+export interface IForwardResponseAPI extends Base {
+	position: IPosition;
+	mapView: IMapView;
+	scoring: {
+		queryScore: number;
+		fieldScore: {
+			country: number;
+			district: number;
+			streets: number[];
+			postalCode: number;
+		};
+	};
+}
+
+export interface IAutocompleteResponseAPI extends Base {
+	language: string;
+	houseNumberType: string;
+	highlights: {
+		title: IHighlight[];
+		address: {
+			label: IHighlight[];
+			district: IHighlight[];
+			street: IHighlight[];
+			houseNumber: IHighlight[];
+		};
+	};
+}
+
+interface IPosition {
 	lat: number;
 	lng: number;
+}
+
+interface IMapView {
+	west: number;
+	south: number;
+	east: number;
+	north: number;
+}
+
+interface IHighlight {
+	start: number;
+	end: number;
 }

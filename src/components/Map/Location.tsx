@@ -8,7 +8,7 @@ const createRoutineMachineLayer = () => {
 		flyTo: true,
 		strings: {
 			title: 'Show your location'
-			// popup: 'Testowa wiadmość na lokalizacji'
+			// popup: 'Test message'
 		},
 		locateOptions: {
 			enableHighAccuracy: true

@@ -1,12 +1,7 @@
-import React, {
-	useCallback,
-	useEffect,
-	useMemo,
-	useRef,
-	useState
-} from 'react';
-import { getSuggestions } from '../../lib/api/getRouteData';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { getAutocompleteData } from '../../lib/api/getFromHereAPI';
 import { debounce } from '../../lib/helpers/debounce';
+import { IAutocompleteResponseAPI } from '../../lib/interfaces/routeData';
 
 interface props {
 	id: 'startingPoint' | 'endingPoint';
@@ -14,7 +9,7 @@ interface props {
 	placeholder: string;
 	value: string;
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-	handleSetValueFromSuggestion: (
+	handleSetSuggestion: (
 		id: 'startingPoint' | 'endingPoint',
 		suggestion: string
 	) => void;
@@ -26,16 +21,18 @@ function FormControl({
 	placeholder,
 	value,
 	onChange,
-	handleSetValueFromSuggestion
-}: props) {
-	const [suggestions, setSuggestions] = useState([]);
+	handleSetSuggestion
+}: props): JSX.Element {
+	const [suggestions, setSuggestions] = useState<IAutocompleteResponseAPI[]>(
+		[]
+	);
 	const [showSuggsestions, setShowSuggsestions] = useState(false);
-	const autocompleteRef = useRef();
+	const autocompleteRef = useRef<HTMLDivElement>(null);
 
-	const handleOutsideClick = (e) => {
+	const handleOutsideClick = (e: MouseEvent) => {
 		if (
 			autocompleteRef.current &&
-			!autocompleteRef.current.contains(e.target)
+			!autocompleteRef.current.contains(e.target as Node)
 		) {
 			setShowSuggsestions(false);
 		}
@@ -43,7 +40,7 @@ function FormControl({
 
 	const sendRequest = useCallback(async (value: string) => {
 		if (value) {
-			const res = await getSuggestions(value);
+			const res = await getAutocompleteData(value);
 			if (res) return setSuggestions(res);
 		}
 		return setSuggestions([]);
@@ -69,7 +66,7 @@ function FormControl({
 	return (
 		<div className="mb-4">
 			<label htmlFor={id}>{label}</label>
-			<div className={` relative `} ref={autocompleteRef}>
+			<div className="relative" ref={autocompleteRef}>
 				<input
 					className={`p-2 w-full bg-black focus:outline-none z-10 ${
 						showSuggsestions && suggestions.length > 0
@@ -93,7 +90,7 @@ function FormControl({
 							<li
 								className="p-1 pt-2 pb-2 truncate rounded-md text-zinc-400 hover:bg-[#14b8a6] hover:text-black cursor-pointer"
 								onClick={() => {
-									handleSetValueFromSuggestion(id, suggestion.address.label);
+									handleSetSuggestion(id, suggestion.address.label);
 									setShowSuggsestions(false);
 								}}
 								key={suggestion.address.label}
