@@ -4,7 +4,11 @@ import { RouteContext } from '../../lib/context/RouteProvider';
 import { debounce } from '../../lib/helpers/debounce';
 import FormControl from './FormControl';
 
-function Form(): JSX.Element {
+interface props {
+	hideNavbar: () => void;
+}
+
+function Form({ hideNavbar }: props): JSX.Element {
 	const { state, setLoading, setRoute } = useContext(RouteContext);
 	const [values, setValues] = useState({
 		startingPoint: '',
@@ -61,6 +65,7 @@ function Form(): JSX.Element {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		getWaypoints();
+		hideNavbar();
 	};
 
 	return (
