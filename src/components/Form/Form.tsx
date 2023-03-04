@@ -30,8 +30,8 @@ function Form({ hideNavbar }: props): JSX.Element {
 		if (
 			!values.startingPoint ||
 			!values.endingPoint ||
-			state.route.waypoints.startingPoint.name === values.startingPoint ||
-			state.route.waypoints.endingPoint.name === values.endingPoint
+			(state.route.waypoints.startingPoint.name === values.startingPoint &&
+				state.route.waypoints.endingPoint.name === values.endingPoint)
 		)
 			return;
 
