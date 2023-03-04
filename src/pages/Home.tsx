@@ -1,9 +1,10 @@
-import { ChevronDoubleRightIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import { useContext, useEffect, useState } from 'react';
+import { ChevronDoubleRightIcon } from '@heroicons/react/24/solid';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Form from '../components/Form/Form';
 import LastRouteCard from '../components/LastRouteCard';
 import Logo from '../components/Logo';
+import CloseIcon from '../components/UI/CloseIcon';
 import { RouteContext } from '../lib/context/RouteProvider';
 import { areEqual } from '../lib/helpers/areEqual';
 import { IRoute } from '../lib/interfaces/context';
@@ -20,16 +21,19 @@ function Home() {
 	const [expandNav, setExpandNav] = useState(false);
 	const { pathname } = useLocation();
 
-	const handleHideNavbar = () => setExpandNav(false);
+	const handleHideNavbar = useCallback(() => setExpandNav(false), [expandNav]);
 
-	const handleChangeRoute = (route: IRoute) => {
-		handleHideNavbar();
-		if (areEqual(route.waypoints, state.route.waypoints) && pathname !== '/')
-			return;
+	const handleChangeRoute = useCallback(
+		(route: IRoute) => {
+			handleHideNavbar();
+			if (areEqual(route.waypoints, state.route.waypoints) && pathname !== '/')
+				return;
 
-		setLoading(true);
-		setRoute(route.waypoints);
-	};
+			setLoading(true);
+			setRoute(route.waypoints);
+		},
+		[state.route, pathname]
+	);
 
 	useEffect(() => {
 		handleDisableScroll(expandNav);
@@ -45,16 +49,12 @@ function Home() {
 				className="navbar bg-black text-white md:flex-1"
 				data-expand={expandNav}
 				data-home={homePage}>
-				<div className="close" onClick={() => setExpandNav(false)}>
-					<XMarkIcon width={35} height={35} />
-				</div>
+				<CloseIcon onClick={handleHideNavbar} />
 				<div className="container p-4 font-semibold tracking-tight text-gray-100">
 					<Logo />
 					<div className="mb-5">
 						<h1 className="text-3xl font-bold text-white">New route:</h1>
-						<div className="p-3 bg-zinc-900 rounded-lg">
-							<Form hideNavbar={handleHideNavbar} />
-						</div>
+						<Form hideNavbar={handleHideNavbar} />
 					</div>
 					<div>
 						<h1 className="text-3xl font-bold text-white">Last routes:</h1>

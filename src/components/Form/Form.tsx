@@ -69,29 +69,31 @@ function Form({ hideNavbar }: props): JSX.Element {
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<FormControl
-				id="startingPoint"
-				label="Start"
-				placeholder="E.g. 123 Main Street, Anytown, USA"
-				value={values.startingPoint}
-				onChange={handleChangeValue}
-				handleSetSuggestion={handleSetSuggestion}
-			/>
-			<FormControl
-				id="endingPoint"
-				label="End"
-				placeholder="E.g. 456 High Street, Cityville, Canada"
-				value={values.endingPoint}
-				onChange={handleChangeValue}
-				handleSetSuggestion={handleSetSuggestion}
-			/>
-			<button
-				type="submit"
-				className="block w-full p-2 rounded-md font-semibold bg-[#14b8a6] text-black">
-				Search
-			</button>
-		</form>
+		<div className="p-3 bg-zinc-900 rounded-lg">
+			<form onSubmit={handleSubmit}>
+				<FormControl
+					id="startingPoint"
+					label="Start"
+					placeholder="E.g. 123 Main Street, Anytown, USA"
+					value={values.startingPoint}
+					onChange={handleChangeValue}
+					handleSetSuggestion={handleSetSuggestion}
+				/>
+				<FormControl
+					id="endingPoint"
+					label="End"
+					placeholder="E.g. 456 High Street, Cityville, Canada"
+					value={values.endingPoint}
+					onChange={handleChangeValue}
+					handleSetSuggestion={handleSetSuggestion}
+				/>
+				<button
+					type="submit"
+					className="block w-full p-2 rounded-md font-semibold bg-[#14b8a6] text-black">
+					Search
+				</button>
+			</form>
+		</div>
 	);
 }
 

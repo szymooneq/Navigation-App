@@ -1,7 +1,8 @@
 import { MapPinIcon } from '@heroicons/react/24/solid';
+import { memo } from 'react';
 import { Link } from 'react-router-dom';
 
-function Logo(): JSX.Element {
+const Logo = memo(function Logo(): JSX.Element {
 	return (
 		<Link
 			to="/"
@@ -10,6 +11,6 @@ function Logo(): JSX.Element {
 			<h1 className="text-4xl font-bold">Navigation</h1>
 		</Link>
 	);
-}
+});
 
 export default Logo;

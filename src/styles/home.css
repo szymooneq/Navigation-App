@@ -17,7 +17,6 @@
 	background-color: rgb(24 24 27);
 	cursor: pointer;
 	opacity: 1;
-	transition: 0.5s;
 }
 
 .burger {
@@ -44,14 +43,17 @@
 	transform: translate(0, 0);
 }
 
-.navbar[data-expand='false'] .close {
-	opacity: 0;
-	visibility: hidden;
+.navbar[data-home='true'] .close {
+	display: none;
 }
 
 .navbar[data-expand='true'] ~ .burger {
 	opacity: 0;
 	visibility: hidden;
+}
+
+.navbar[data-home='true'] ~ .burger {
+	display: none;
 }
 
 .navbar[data-expand='false'][data-home='false'] {

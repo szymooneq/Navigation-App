@@ -33,3 +33,22 @@
 		height: 65vh;
 	}
 }
+
+@media print {
+	html,
+	body {
+		width: max-content;
+		height: 100vh; /* Use 100% here to support printing more than a single page*/
+		margin: auto;
+		padding: 0 !important;
+		overflow: hidden;
+	}
+
+	.print {
+		display: none;
+	}
+
+	.leaflet-container {
+		height: 40vh;
+	}
+}
