@@ -1,6 +1,6 @@
 import { ReducerAction, ReducerState } from '../interfaces/context';
 
-export const appReducer = (state: ReducerState, action: ReducerAction) => {
+export const routeReducer = (state: ReducerState, action: ReducerAction) => {
 	switch (action.type) {
 		case 'setRoute': {
 			const newRoute = {

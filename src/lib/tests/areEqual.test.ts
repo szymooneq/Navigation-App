@@ -1,4 +1,4 @@
-import { areEqual } from '../areEqual';
+import { areEqual } from '../helpers/areEqual';
 
 describe('areEqual()', () => {
 	it('Arrays are no equal', () => {

@@ -9,7 +9,7 @@ import {
 	IRouteDetails,
 	IRouteWaypoints
 } from '../interfaces/context';
-import { appReducer } from './appReducer';
+import { routeReducer } from './routeReducer';
 
 const INITIAL_STATE = {
 	route: {
@@ -39,7 +39,7 @@ interface props {
 }
 
 function RouteProvider({ children }: props): JSX.Element {
-	const [state, dispatch] = useReducer(appReducer, INITIAL_STATE);
+	const [state, dispatch] = useReducer(routeReducer, INITIAL_STATE);
 	const [searchParams, setSearchParams] = useSearchParams();
 	const { pathname } = useLocation();
 	const navigate = useNavigate();

@@ -1,4 +1,4 @@
-import { recalculatePrice } from '../recalculatePrice';
+import { recalculatePrice } from '../helpers/recalculatePrice';
 
 describe('calculatePrice()', () => {
 	it('Recalculate for rate 2 and 200km', () => {

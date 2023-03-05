@@ -1,4 +1,4 @@
-import { loadWaypointsFromURL } from '../loadFromURL';
+import { loadWaypointsFromURL } from '../helpers/loadFromURL';
 
 describe('loadWaypointsFromURL()', () => {
 	it('Search params have correct values', () => {

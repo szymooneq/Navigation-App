@@ -1,8 +1,10 @@
 {
-	"name": "e-ux-task-szymon-dudka",
+	"name": "navigation-project",
 	"private": true,
 	"version": "0.0.0",
 	"type": "module",
+	"author": "Szymon Dudka",
+	"description": "Web navigation app powered by React, Leaflet and Here API allows users to input a desired route and instantly view it on the map, complete with estimated distance and time of travel.",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
@@ -11,12 +13,7 @@
 	},
 	"dependencies": {
 		"@heroicons/react": "^2.0.16",
-		"@types/leaflet": "^1.9.1",
-		"@types/leaflet-routing-machine": "^3.2.4",
-		"@types/leaflet.locatecontrol": "^0.74.1",
-		"@types/node": "^18.14.6",
 		"leaflet": "^1.9.3",
-		"leaflet-contextmenu": "^1.4.0",
 		"leaflet-routing-machine": "^3.2.12",
 		"leaflet.locatecontrol": "^0.79.0",
 		"react": "^18.2.0",
@@ -24,10 +21,13 @@
 		"react-leaflet": "^4.2.0",
 		"react-router-dom": "^6.8.1",
 		"react-to-print": "^2.14.12",
-		"ts-node": "^10.9.1",
 		"vite-plugin-rewrite-all": "^1.0.1"
 	},
 	"devDependencies": {
+		"@types/leaflet": "^1.9.1",
+		"@types/leaflet-routing-machine": "^3.2.4",
+		"@types/leaflet.locatecontrol": "^0.74.1",
+		"@types/node": "^18.14.6",
 		"@tailwindcss/typography": "^0.5.9",
 		"@types/jest": "^29.4.0",
 		"@types/react": "^18.0.27",
@@ -39,6 +39,7 @@
 		"postcss": "^8.4.21",
 		"tailwindcss": "^3.2.7",
 		"ts-jest": "^29.0.5",
+		"ts-node": "^10.9.1",
 		"typescript": "^4.9.3",
 		"vite": "^4.1.0"
 	}
