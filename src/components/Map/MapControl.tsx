@@ -87,7 +87,7 @@ function MapControl(): JSX.Element {
 			scrollWheelZoom={true}>
 			<TileLayer
 				attribution='<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank">&copy; <b>Jawg</b>Maps</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-				url={import.meta.env.VITE_MAPBOX_TILES}
+				url={import.meta.env.VITE_MAP_TILES}
 				minZoom={0}
 				maxZoom={22}
 				// subdomains="abcd"

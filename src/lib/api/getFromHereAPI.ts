@@ -4,7 +4,7 @@ import {
 	IReverseResponseAPI
 } from '../interfaces/routeData';
 
-const API_KEY: string = import.meta.env.VITE_GEOCODING_API_KEY;
+const API_KEY: string = import.meta.env.VITE_HERE_API_KEY;
 
 export const getReverseData = async (
 	coordinates: number[]

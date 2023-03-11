@@ -4,7 +4,7 @@
 	"version": "0.0.0",
 	"type": "module",
 	"author": "Szymon Dudka",
-	"description": "Web navigation app powered by React, Leaflet and Here API allows users to input a desired route and instantly view it on the map, complete with estimated distance and time of travel.",
+	"description": "Web navigation app that allows users to input a desired route and instantly view it on the map, complete with estimated distance and time of travel.",
 	"scripts": {
 		"dev": "vite",
 		"build": "tsc && vite build",
